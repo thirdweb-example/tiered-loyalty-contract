@@ -7,11 +7,11 @@ import "@erc6551/src/interfaces/IERC6551Registry.sol";
 import "@thirdweb-dev/contracts/lib/NFTMetadataRendererLib.sol";
 
 contract MembershipNFT is ERC721Base {
-    // TODO get rid of levels & increment instead
     // TODO calculate threshold rather than setting it manually
     // TODO edit comments
     // TODO add events
 
+    /// @notice Emitted when metadata is updated for a tier
     event SharedMetadataUpdated(
         uint256 indexed level,
         string indexed name,
@@ -20,7 +20,13 @@ contract MembershipNFT is ERC721Base {
         string animationURI
     );
 
-    /// @notice Token metadata information
+    /**
+     *  @notice Token metadata information
+     *
+     *  @param threshold
+     *  @param metadata Shared description of NFT in metadata
+     *  @param exists check if the level has already been added
+     */
     struct TierInfo {
         uint256 threshold;
         SharedMetadataInfo metadata;
@@ -120,6 +126,8 @@ contract MembershipNFT is ERC721Base {
 
     /**
      *  @dev Sets shared metadata and the threshold balance for an NFT given it's level.
+     * @param _level level to set metadata for
+     *  @param _threshold balance threshold for level
      *  @param _metadata common metadata for all tokens
      */
     function _setSharedMetadata(
@@ -127,7 +135,6 @@ contract MembershipNFT is ERC721Base {
         uint256 _threshold,
         SharedMetadataInfo calldata _metadata
     ) internal {
-        require(tierURIs[_level].exists == false, "This level already exists");
         SharedMetadataInfo memory levelSharedMetadata = SharedMetadataInfo({
             name: _metadata.name,
             description: _metadata.description,
@@ -135,7 +142,9 @@ contract MembershipNFT is ERC721Base {
             animationURI: _metadata.animationURI
         });
         tierURIs[_level] = TierInfo(_threshold, levelSharedMetadata, true);
-        levels.push(_level);
+        if (tierURIs[_level].exists == false) {
+            levels.push(_level);
+        }
         emit SharedMetadataUpdated({
             level: _level,
             name: _metadata.name,
@@ -148,6 +157,7 @@ contract MembershipNFT is ERC721Base {
     /**
      *  @dev Token URI information getter for a given level.
      *  @param level  level to get URI for
+     *  @param tokenId token id to get URI for
      */
     function _getURIFromSharedMetadata(
         uint256 level,
