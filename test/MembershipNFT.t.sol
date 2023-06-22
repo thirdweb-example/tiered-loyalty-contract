@@ -45,8 +45,8 @@ contract MembershipNFTTest is Test {
             0,
             address(tokenboundaccount),
             address(mockERC20),
-            block.chainid,
-            address(registry)
+            address(registry),
+            block.chainid
         );
         // mint the key a membership nft
         membershipContract.claim(sender);

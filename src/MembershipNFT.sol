@@ -50,11 +50,11 @@ contract MembershipNFT is ERC721Base {
 
     /// @notice Token metadata information
     mapping(uint256 => TierInfo) public tierURIs;
-    address internal implementation;
-    address internal tokenContract;
-    uint256[] internal levels;
-    uint256 internal chainId;
-    address internal registryContract;
+    address public implementation;
+    address public tokenContract;
+    uint256[] public levels;
+    uint256 public chainId;
+    address public registryContract;
 
     constructor(
         string memory _name,
@@ -63,13 +63,13 @@ contract MembershipNFT is ERC721Base {
         uint128 _royaltyBps,
         address _implementation,
         address _tokenContract,
-        uint256 _chainId,
-        address _registryContract
+        address _registryContract,
+        uint256 _chainId
     ) ERC721Base(_name, _symbol, _royaltyRecipient, _royaltyBps) {
         implementation = _implementation;
         tokenContract = _tokenContract;
-        chainId = _chainId;
         registryContract = _registryContract;
+        chainId = _chainId;
     }
 
     /// @notice Set shared metadata and threshold balance for a level
@@ -110,7 +110,7 @@ contract MembershipNFT is ERC721Base {
         address wallet = IERC6551Registry(registryContract).account(
             implementation,
             chainId,
-            tokenContract,
+            address(this),
             _tokenId,
             0
         );
@@ -141,10 +141,10 @@ contract MembershipNFT is ERC721Base {
             imageURI: _metadata.imageURI,
             animationURI: _metadata.animationURI
         });
-        tierURIs[_level] = TierInfo(_threshold, levelSharedMetadata, true);
         if (tierURIs[_level].exists == false) {
             levels.push(_level);
         }
+        tierURIs[_level] = TierInfo(_threshold, levelSharedMetadata, true);
         emit SharedMetadataUpdated({
             level: _level,
             name: _metadata.name,
