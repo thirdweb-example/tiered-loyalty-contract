@@ -3,11 +3,10 @@ pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721Base.sol";
 import "@thirdweb-dev/contracts/eip/interface/IERC20.sol";
-import "@thirdweb-dev/contracts/extension/ContractMetadata.sol";
 import "@erc6551/src/interfaces/IERC6551Registry.sol";
 import "@thirdweb-dev/contracts/lib/NFTMetadataRendererLib.sol";
 
-contract MembershipNFT is ERC721Base, ContractMetadata {
+contract MembershipNFT is ERC721Base {
     // TODO calculate threshold rather than setting it manually
     // TODO edit comments
     // TODO add events
@@ -94,7 +93,6 @@ contract MembershipNFT is ERC721Base, ContractMetadata {
 
     // allow the user to claim the NFT (will be level 0)
     function claim(address _to) public virtual {
-        require(_canMint(), "Not authorized to mint.");
         _safeMint(_to, 1, "");
     }
 
