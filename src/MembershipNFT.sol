@@ -3,10 +3,11 @@ pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721Base.sol";
 import "@thirdweb-dev/contracts/eip/interface/IERC20.sol";
+import "@thirdweb-dev/contracts/extension/ContractMetadata.sol";
 import "@erc6551/src/interfaces/IERC6551Registry.sol";
 import "@thirdweb-dev/contracts/lib/NFTMetadataRendererLib.sol";
 
-contract MembershipNFT is ERC721Base {
+contract MembershipNFT is ERC721Base, ContractMetadata {
     // TODO calculate threshold rather than setting it manually
     // TODO edit comments
     // TODO add events
