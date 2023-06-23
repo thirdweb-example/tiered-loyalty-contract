@@ -54,7 +54,7 @@ contract MembershipNFTTest is Test {
         account = registry.createAccount(
             address(tokenboundaccount),
             block.chainid,
-            address(mockERC20),
+            address(membershipContract),
             0,
             0,
             bytes("")
@@ -108,9 +108,9 @@ contract MembershipNFTTest is Test {
         metadata.description = "This is a silver level membership";
         metadata.imageURI = "myURI2";
         metadata.animationURI = "myAnimationURI2";
-        membershipContract.setSharedMetadata(1, 29, metadata);
+        membershipContract.setSharedMetadata(1, 10, metadata);
         // mint tokens to the wallet
-        mockERC20.mint(account, 30);
+        mockERC20.mint(account, 10);
         // get the updated uri
         string memory uri = membershipContract.tokenURI(0);
         // check the metadata for the NFT has updated

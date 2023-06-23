@@ -55,6 +55,7 @@ contract MembershipNFT is ERC721Base {
     uint256[] public levels;
     uint256 public chainId;
     address public registryContract;
+    address[] internal owners;
 
     constructor(
         string memory _name,
@@ -93,7 +94,9 @@ contract MembershipNFT is ERC721Base {
 
     // allow the user to claim the NFT (will be level 0)
     function claim(address _to) public virtual {
+        require(_canClaim(_to), "Already claimed");
         _safeMint(_to, 1, "");
+        owners.push(_to);
     }
 
     /**
@@ -176,5 +179,14 @@ contract MembershipNFT is ERC721Base {
     /// @dev Returns whether shared metadata can be set in the given execution context.
     function _canSetSharedMetadata() internal view virtual returns (bool) {
         return msg.sender == owner();
+    }
+
+    function _canClaim(address _to) internal view virtual returns (bool) {
+        for (uint i = 0; i < owners.length; i++) {
+            if (owners[i] == _to) {
+                return false;
+            }
+        }
+        return true;
     }
 }
